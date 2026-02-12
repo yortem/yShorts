@@ -1,0 +1,37 @@
+# .NET
+bin/
+obj/
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+
+# Local configuration
+appsettings.json
+!appsettings.Example.json
+
+# Temporary files & Output
+temp/
+output/
+*.mp4
+*.mp3
+*.srt
+*.jpg
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.bak
+
+# Python (edge-tts)
+__pycache__/
+.venv/
+venv/

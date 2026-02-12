@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>yShorts</RootNamespace>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="favicon.ico" />
+    <Compile Remove="DebugTool\**" />
+    <EmbeddedResource Remove="DebugTool\**" />
+    <None Remove="DebugTool\**" />
+  </ItemGroup>
+
+</Project>
