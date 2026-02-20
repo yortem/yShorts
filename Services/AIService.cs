@@ -27,7 +27,9 @@ public class AIService
     {
         Console.WriteLine($"\n🤖 [AI] Generating script for: \"{topic}\" in {AppConfig.VideoLanguage}...");
 
+        var mood = AppConfig.Mood;
         var prompt = $@"You are a short-form video scriptwriter. Create a script for a 30-60 second vertical video (TikTok/YouTube Shorts style) about: ""{topic}"".
+Mood/Tone: {mood}.
 
 The script MUST be in {AppConfig.VideoLanguage.ToUpper()}.
 
@@ -125,8 +127,10 @@ Focus on visually descriptive keywords that would match cinematic B-roll footage
     public async Task<ScriptResult> GenerateScriptAdvancedAsync(List<VideoStage> stages)
     {
         var stagesDescription = string.Join("\n", stages.Select((s, i) => $"Stage {i + 1}: Goal: {s.Goal}"));
+        var mood = AppConfig.Mood;
 
         var prompt = $@"You are a short-form video scriptwriter. Create a script consisting of multiple parts for a video.
+Mood/Tone: {mood}.
 The video has {stages.Count} stages:
 {stagesDescription}
 

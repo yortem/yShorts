@@ -18,6 +18,8 @@ public static class AppConfig
     public static string TempDir { get; set; } = "temp";
     public static string TtsVoice { get; set; } = "en-US-GuyNeural";
     public static string VideoLanguage { get; set; } = "English";
+    public static string Mood { get; set; } = "Viral";
+    public static string SubtitleStyle { get; set; } = "Pop-in (Modern)";
 
     public static void Load()
     {
@@ -57,6 +59,8 @@ public static class AppConfig
         TempDir = GetString(root, "TempDir", TempDir);
         TtsVoice = GetString(root, "TtsVoice", TtsVoice);
         VideoLanguage = GetString(root, "VideoLanguage", VideoLanguage);
+        Mood = GetString(root, "Mood", Mood);
+        SubtitleStyle = GetString(root, "SubtitleStyle", SubtitleStyle);
 
         AutoDetectEdgeTts();
     }
@@ -105,7 +109,9 @@ public static class AppConfig
             ["OutputDir"] = OutputDir,
             ["TempDir"] = TempDir,
             ["TtsVoice"] = TtsVoice,
-            ["VideoLanguage"] = VideoLanguage
+            ["VideoLanguage"] = VideoLanguage,
+            ["Mood"] = Mood,
+            ["SubtitleStyle"] = SubtitleStyle
         };
 
         var options = new JsonSerializerOptions { WriteIndented = true };

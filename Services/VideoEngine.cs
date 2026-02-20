@@ -59,7 +59,7 @@ public class VideoEngine
                     stageAudio = Path.Combine(AppConfig.TempDir, $"stage_{i}_audio.mp3");
                     var mediaService = new MediaService(new HttpClient());
                     await mediaService.GenerateTtsAsync(stageScript, stageAudio);
-                    stageDuration = await mediaService.GetAudioDurationAsync(stageAudio);
+                    stageDuration = await mediaService.GetMediaDurationAsync(stageAudio);
                     finalStageAudios.Add(stageAudio);
                 }
 
@@ -135,7 +135,8 @@ public class VideoEngine
 
     private async Task CreateLoopVideoAsync(string input, double duration, string output)
     {
-        var inputDuration = await GetVideoDurationAsync(input);
+        var mediaService = new MediaService(new HttpClient());
+        var inputDuration = await mediaService.GetMediaDurationAsync(input);
         if (inputDuration >= duration)
         {
             await RunFfmpegAsync($"-i \"{input}\" -t {duration:F2} -c copy -y \"{output}\"", "Trimming clip");
@@ -167,9 +168,10 @@ public class VideoEngine
 
         // Get the duration of each clip
         var clipDurations = new List<double>();
+        var mediaService = new MediaService(new HttpClient());
         foreach (var clip in clips)
         {
-            var duration = await GetVideoDurationAsync(clip);
+            var duration = await mediaService.GetMediaDurationAsync(clip);
             clipDurations.Add(duration);
         }
 
@@ -204,40 +206,6 @@ public class VideoEngine
 
         await File.WriteAllTextAsync(outputPath, sb.ToString());
         Console.WriteLine($"  Concat list created: {loopCount} clips looped to ~{currentDuration:F1}s (target: {targetDuration:F1}s)");
-    }
-
-    /// <summary>
-    /// Gets the duration of a video file using FFprobe.
-    /// </summary>
-    private async Task<double> GetVideoDurationAsync(string videoPath)
-    {
-        var args = $"-v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 \"{videoPath}\"";
-
-        var processInfo = new ProcessStartInfo
-        {
-            FileName = AppConfig.FfprobePath,
-            Arguments = args,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true
-        };
-
-        using var process = Process.Start(processInfo);
-        if (process == null) return 5.0; // Fallback
-
-        var output = await process.StandardOutput.ReadToEndAsync();
-        await process.WaitForExitAsync();
-
-        if (double.TryParse(output.Trim(), System.Globalization.NumberStyles.Any,
-            System.Globalization.CultureInfo.InvariantCulture, out var duration))
-        {
-            return duration;
-        }
-
-        // Fallback: assume 5 seconds if we can't determine
-        Console.WriteLine($"  ⚠️ Could not determine duration for {Path.GetFileName(videoPath)}, assuming 5s");
-        return 5.0;
     }
 
     /// <summary>
